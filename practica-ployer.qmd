@@ -1,0 +1,111 @@
+---
+title: "practica-ployer"
+author: Sofía Briones
+format: html
+toc: true
+lang: es
+theme: lux
+---
+
+#INTRODUCCIÓN
+
+Este documento contiene algunos ejemplos de uso de las funciones del paquete dlpyr de [Tidyverse] [https://www.tidyverse.org/]
+#Carga de datos
+```{r}
+#| label: carga-paquetes
+#| message: false
+#| warning: false 
+
+library(tidyverse)
+library(palmerpenguins)
+library(knitr)
+```
+
+#carga de datos
+
+```{r}
+#| label: carga-datos
+#| message: false
+#| warning: false
+
+delitos_2023 <- read_csv(
+  "estadisticaspoliciales2023.csv",
+  locale = locale(encoding = "WINDOWS-1252")
+)
+```
+
+
+
+
+# select()
+
+#Ejemplos
+
+```{r}
+#| label:  select-01
+
+# select(penguins, species, bill_length_mm)
+penguins |>
+  select(species, bill_length_mm, sex)
+ head(10) |>
+   kable()
+```
+
+#EJEMPLO2
+
+```{r}
+#|label:  select-02
+
+penguins |>
+  select(
+    especie = species,
+    longitud_pico_mm = bill_length_mm,
+    sex
+  ) |>
+  head(10) |>
+  kable()
+```
+
+ #filter ()
+ 
+ ##ejemplo 1
+ 
+```{r}
+#| label: filter-01
+penguins |>
+  filter(species == "Adelie") |>
+  filter(sex=="male") |>
+  filter (island=="Torgersen")|>
+  kable()
+```
+ 
+
+ 
+```{r}
+#| label: filter-02
+# Delitos del cantón de montes de Oca
+
+delitos_2023 |>
+  select(Delito,SubDelito, Victima, SubVictima, Canton, Distrito)|>
+  filter(Canton == "MONTES DE OCA") |>
+  kable()
+```
+```{r}
+#| label:  filter-03
+#asaltos cometidos en san pedro de montes de oca
+  delitos_2023 |>
+select( Delito, SubDelito, Victima, SubVictima, Canton, Distrito) |>
+  filter(Delito == "Asalto" & Distrito == "SAN PEDRO" & Canton == "MONTES DE OCA") |>
+   kable()
+```
+
+ 
+```{r}
+#| label:  filter-04
+#asaltos y homecidios en san pedro de montas de oca
+  delitos_2023 |>
+select( Delito, SubDelito, Victima, SubVictima, Canton, Distrito) |>
+  filter((Distrito == "SAN PEDRO" & Canton == "MONTES DE OCA") & 
+           (Delito == "ASALTO" | Delito == "HOMICIDIO"))|>
+   kable()
+``` 
